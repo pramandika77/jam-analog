@@ -1,0 +1,423 @@
+@import url('https://fonts.googleapis.com/css2?family=Fira+Code:wght@300..700&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: "Fira Code", sans-serif;
+}
+
+:root {
+    --bg: #f6f7fb;
+    --surface: #ffffff;
+    --text: #18191a;
+    --muted: rgba(24, 25, 26, 0.7);
+    --accent: #2d9cdb;
+    --accent-2: #56ccf2;
+    --danger: #e74c3c;
+    --shadow: 0 15px 25px rgba(0, 0, 0, 0.08), 0 25px 45px rgba(0, 0, 0, 0.08);
+    --ring: 0 0 0 4px rgba(45, 156, 219, 0.25);
+    --clock-size: clamp(260px, 72vw, 400px);
+    --clock-border: clamp(7px, 2vw, 12px);
+    --clock-inner-ring: clamp(8px, 2.2vw, 10px);
+    --clock-inset: clamp(14px, 4vw, 20px);
+}
+
+body[data-theme="ocean"] {
+    --accent: #2d9cdb;
+    --accent-2: #56ccf2;
+    --ring: 0 0 0 4px rgba(45, 156, 219, 0.25);
+}
+
+body[data-theme="sunset"] {
+    --accent: #f2994a;
+    --accent-2: #eb5757;
+    --ring: 0 0 0 4px rgba(242, 153, 74, 0.25);
+}
+
+body[data-theme="forest"] {
+    --accent: #27ae60;
+    --accent-2: #6fcf97;
+    --ring: 0 0 0 4px rgba(39, 174, 96, 0.25);
+}
+
+body {
+    display: flex;
+    min-height: 100vh;
+    align-items: center;
+    justify-content: center;
+    color: var(--text);
+    background: var(--bg);
+    position: relative;
+    overflow-x: hidden;
+}
+
+body::before {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    background: 
+        radial-gradient(900px 420px at 15% 10%, rgba(86, 204, 242, 0.30), transparent 60%),
+        radial-gradient(900px 420px at 85% 15%, rgba(45, 156, 219, 0.25), transparent 60%),
+        radial-gradient(900px 420px at 50% 95%, rgba(231, 76, 60, 0.12), transparent 60%);
+    filter: saturate(1.1);
+}
+
+body.dark {
+    --bg: #111213;
+    --surface: #18191a;
+    --text: #ffffff;
+    --muted: rgba(255, 255, 255, 0.75);
+    --shadow: 0 15px 30px rgba(0, 0, 0, 0.35), 0 35px 60px rgba(0, 0, 0, 0.35);
+}
+
+.container {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 34px;
+    padding: 28px 18px;
+    width: min(900px, 100%);
+}
+
+.topbar {
+    width: min(760px, 100%);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    gap: 16px;
+    padding: 5px 16px;
+    border-radius: 16px;
+    background: color-mix(in oklab, var(--surface) 80%, transparent);
+    box-shadow: var(--shadow);
+    backdrop-filter: blur(10px);
+    position: relative;
+    z-index: 1;
+}
+
+.readout {
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 2px;
+    padding: 14px 12px;
+    border-radius: 14px;
+    background: color-mix(in oklab, var(--surface) 70%, transparent);
+    border: 1px solid color-mix(in oklab, var(--text) 14%, transparent);
+    min-width: 150px;
+}
+
+.readout__time {
+    font-variant-numeric: tabular-nums;
+    letter-spacing: 0.6px;
+    font-weight: 650;
+    font-size: 14px;
+}
+
+.readout__date {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.brand {
+    display: flex;
+    flex-direction: column;
+    line-height: 1.1;
+}
+
+.brand__name {
+    font-size: 18px;
+    font-weight: 650;
+    letter-spacing: 0.2px;
+}
+
+.brand__tag {
+    font-size: 12px;
+    color: var(--muted);
+}
+
+.controls {
+    display: flex;
+    align-items: center;
+    gap: 10px;
+}
+
+.theme-switch {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 6px;
+    border-radius: 14px;
+    background: color-mix(in oklab, var(--surface) 65%, transparent);
+    border: 1px solid color-mix(in oklab, var(--text) 14%, transparent);
+}
+
+.theme-btn {
+    appearance: none;
+    border: 1px solid transparent;
+    padding: 8px 10px;
+    border-radius: 10px;
+    background: transparent;
+    color: var(--text);
+    font-size: 13px;
+    cursor: pointer;
+    transition: transform 120ms ease, background 160ms ease, border-color 160ms ease;
+}
+
+.theme-btn:hover {
+    transform: translateY(-1px);
+    background: color-mix(in oklab, var(--surface) 75%, transparent);
+    border-color: color-mix(in oklab, var(--text) 16%, transparent);
+}
+
+.theme-btn.is-active {
+    background: linear-gradient(135deg, color-mix(in oklab, var(--accent) 88%, white), color-mix(in oklab, var(--accent-2) 88%, white));
+    border-color: color-mix(in oklab, var(--text) 10%, transparent);
+    color: #0b0c0d;
+}
+
+.theme-btn:focus-visible {
+    outline: none;
+    box-shadow: var(--ring);
+}
+
+.container .clock {
+    position: relative;
+    width: var(--clock-size);
+    height: var(--clock-size);
+    background: color-mix(in oklab, var(--surface) 88%, transparent);
+    border-radius: 50%;
+    box-shadow: var(--shadow);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+    z-index: 1;
+    border: var(--clock-border) solid color-mix(in oklab, var(--accent) 55%, var(--text));
+    outline: 2px solid color-mix(in oklab, var(--text) 12%, transparent);
+    outline-offset: 4px;
+}
+
+.container .clock::after {
+    content: "";
+    position: absolute;
+    inset: var(--clock-inner-ring);
+    border-radius: 50%;
+    pointer-events: none;
+    border: 1px solid color-mix(in oklab, var(--text) 10%, transparent);
+    opacity: 0.9;
+}
+
+.clock label {
+    position: absolute;
+    inset: var(--clock-inset);
+    text-align: center;
+    transform: rotate(calc(var(--i) * (360deg / 12)));
+}
+
+.clock label span {
+    display: inline-block;
+    font-size: clamp(18px, 5.5vw, 30px);
+    font-weight: 600;
+    color: var(--text);
+    transform: rotate(calc(var(--i) * (-360deg / 12)));
+}
+
+.container .indicator {
+    position: absolute;
+    width: clamp(8px, 2.2vw, 10px);
+    height: clamp(8px, 2.2vw, 10px);
+    display: flex;
+    align-items: center;
+    justify-content: center;
+}
+
+.indicator::before {
+    content: "";
+    position: absolute;
+    height: 100%;
+    width: 100%;
+    border-radius: 50%;
+    z-index: 100;
+    background: var(--text);
+    border: clamp(3px, 1vw, 4px) solid var(--accent);
+}
+
+.indicator .hand {
+    position: absolute;
+    height: calc(var(--clock-size) * 0.325);
+    width: clamp(3px, 0.9vw, 4px);
+    bottom: 0;
+    border-radius: 25px;
+    transform-origin: bottom;
+    background: var(--accent);
+    transition: transform 120ms linear;
+}
+
+.hand.minute {
+    height: calc(var(--clock-size) * 0.30);
+    width: clamp(4px, 1.1vw, 5px);
+    background: var(--text);
+}
+
+.hand.hour {
+    height: calc(var(--clock-size) * 0.25);
+    width: clamp(6px, 1.6vw, 8px);
+    background: var(--text);
+}
+
+.hand.second {
+    height: calc(var(--clock-size) * 0.35);
+    width: clamp(2px, 1vw, 5px);
+    background: var(--danger);
+}
+
+.mode-switch {
+    padding: 10px 20px;
+    border-radius: 8px;
+    font-size: 15px;
+    font-weight: 600;
+    display: inline-block;
+    background: #3498db;
+    color: white;
+    box-shadow: 0 5px 10px rgba(0,0,0,0.2);
+    cursor: pointer;
+    user-select: none;
+    text-align: center;
+    border: none;
+}
+
+.mode-switch:hover {
+    background: #2980b9; 
+}
+
+body.dark .mode-switch {
+    background: #f39c12; 
+    color: black;
+}
+
+body.dark .mode-switch:hover {
+    background: #e67e22;
+}
+
+/* CUKUPP/SELESAII SAMPAI SINI */
+
+/* TAMBAHAN FITUR FITUR NGIDE HEEHHEEHEHEHEHE */
+/* ===== GREETING WIDGET ===== */
+.greeting {
+    display: flex;
+    align-items: center;
+    gap: 8px;
+    padding: 10px 20px;
+    background: linear-gradient(135deg, 
+        color-mix(in oklab, var(--accent) 20%, transparent),
+        color-mix(in oklab, var(--accent-2) 20%, transparent)
+    );
+    border-radius: 40px;
+    border: 1px solid color-mix(in oklab, var(--accent) 30%, transparent);
+    backdrop-filter: blur(5px);
+}
+
+.greeting:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg,
+        color-mix(in oklab, var(--accent) 30%, transparent),
+        color-mix(in oklab, var(--accent-2) 30%, transparent)
+    );
+}
+
+.greeting-icon {
+    font-size: 22px;
+}
+
+.greeting-text {
+    font-size: 16px;
+    font-weight: 600;
+    color: var(--text);
+}
+
+/* Dark mode adjustment */
+body.dark .greeting {
+    background: linear-gradient(135deg,
+        color-mix(in oklab, var(--accent) 30%, #000000),
+        color-mix(in oklab, var(--accent-2) 30%, #000000)
+    );
+    border-color: color-mix(in oklab, var(--accent) 40%, transparent);
+}
+
+.daily-quote {
+    margin-top: 20px;
+    padding: 12px 24px;
+    background: linear-gradient(135deg, 
+        color-mix(in oklab, var(--accent) 20%, transparent),
+        color-mix(in oklab, var(--accent-2) 20%, transparent));
+    border-radius: 40px;
+    border: 1px solid color-mix(in oklab, var(--accent) 30%, transparent);
+    backdrop-filter: blur(5px);
+    font-size: 16px;
+    font-weight: 500;
+    color: var(--text);
+    text-align: center;
+    max-width: 500px;
+    animation: fadeIn 0.5s;
+    box-shadow: var(--shadow);
+}
+
+.daily-quote:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+    background: linear-gradient(135deg,
+        color-mix(in oklab, var(--accent) 30%, transparent),
+        color-mix(in oklab, var(--accent-2) 30%, transparent)
+    );
+}
+
+body.dark .daily-quote {
+    background: linear-gradient(135deg,
+        color-mix(in oklab, var(--accent) 30%, #000000),
+        color-mix(in oklab, var(--accent-2) 30%, #000000));
+    border-color: color-mix(in oklab, var(--accent) 40%, transparent);
+}
+
+/* Responsive */
+@media (max-width: 680px) {
+    .greeting-text {
+        font-size: 13px;
+    }
+    .daily-quote {
+        font-size: 14px;
+        padding: 10px 16px;
+    }
+
+}
+
+@media (max-width: 580px) {
+    .topbar{
+        flex-direction: column;
+        align-items: stretch;
+    }
+    .brand {
+        margin-top: 1rem;
+        align-items: center;
+    }
+    .readout {
+        align-items: center;
+    }
+    .mode-switch {
+        font-size: 13px;
+        padding: 10px 8px;
+    }
+    .controls {
+        justify-content: space-between;
+    }
+    .greeting {
+        padding: 6px 14px;
+    }
+    .greeting-icon {
+        font-size: 20px;
+    }
+    .greeting-text {
+        font-size: 15px;
+    }
+}
