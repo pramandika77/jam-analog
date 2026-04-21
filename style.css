@@ -347,7 +347,6 @@ body.dark .greeting {
 }
 
 .daily-quote {
-    margin-top: 20px;
     padding: 12px 24px;
     background: linear-gradient(135deg, 
         color-mix(in oklab, var(--accent) 20%, transparent),
